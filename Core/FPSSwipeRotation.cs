@@ -89,6 +89,12 @@ namespace HS
 
                 targetRotation.x = AlignAngle(baseRotation.x) + GetXRot() * sensitivity * ScreenFactor;
                 targetRotation.x = Mathf.Clamp(targetRotation.x, minXRotation, maxXRotation);
+                
+                //Instant rotate. Can be changed to more smooth rotation
+                Vector3 rot = vertTransform.localEulerAngles;
+                vertTransform.localEulerAngles = new Vector3(targetRotation.x, rot.y, rot.z);
+                rot = horTransform.localEulerAngles;
+                horTransform.localEulerAngles = new Vector3(rot.x, targetRotation.y, rot.z);
             }
         }
         /// <summary>
@@ -111,17 +117,6 @@ namespace HS
         float GetXRot()
         {
             return -(Input.mousePosition.y - startSwipeCoord.y) * (isInvert ? -1f : 1f);
-        }
-
-
-
-        private void FixedUpdate()
-        {
-            if (!isSwipe) return;
-            Vector3 rot = vertTransform.localEulerAngles;
-            vertTransform.localEulerAngles = new Vector3(targetRotation.x, rot.y, rot.z);
-            rot = horTransform.localEulerAngles;
-            horTransform.localEulerAngles = new Vector3(rot.x, targetRotation.y, rot.z);
         }
     }
 }
